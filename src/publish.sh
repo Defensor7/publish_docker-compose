@@ -11,6 +11,8 @@ docker login docker.pkg.github.com -u ${GITHUB_REF} -p ${REPO_TOKEN}
 # build and run the docker images
 VERSION=$VERSION docker-compose -f $DOCKER_COMPOSE up --no-start
 
+REPO=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]')
+
 # get all built IDs
 IMAGE_IDs=$(docker-compose -f $DOCKER_COMPOSE images -q)
 
@@ -20,8 +22,8 @@ while read -r IMAGE_ID; do
 
     echo "IMAGE_ID: $IMAGE_ID"
     # get the name label
-    NAME=$(basename ${GITHUB_REPOSITORY}).$(docker inspect --format '{{ index .Config.Labels.name }}' $IMAGE_ID)
-    PUSH="docker.pkg.github.com/${GITHUB_REPOSITORY}/$NAME:$VERSION"
+    NAME=$(basename $REPO).$(docker inspect --format '{{ index .Config.Labels.name }}' $IMAGE_ID)
+    PUSH="docker.pkg.github.com/$REPO/$NAME:$VERSION"
 
     # tag and push
     docker tag $IMAGE_ID $PUSH
