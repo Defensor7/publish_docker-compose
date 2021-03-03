@@ -11,6 +11,7 @@ docker login docker.pkg.github.com -u ${GITHUB_REF} -p ${REPO_TOKEN}
 # build and run the docker images
 VERSION=$VERSION docker-compose -f $DOCKER_COMPOSE up --no-start
 
+ # Change all uppercase to lowercase
 REPO=$(echo $GITHUB_REPOSITORY | tr '[A-Z]' '[a-z]')
 
 # get all built IDs
